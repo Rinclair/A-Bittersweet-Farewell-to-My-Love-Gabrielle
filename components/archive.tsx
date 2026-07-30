@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
+import { useVoiceActivity } from "@/lib/voice-context"
 import { cn } from "@/lib/utils"
 import archiveData from "@/lib/archive-data.json"
 
@@ -107,6 +108,8 @@ function FolderBook({
 }) {
   const [coverOpen, setCoverOpen] = useState(false)
   const [viewer, setViewer] = useState<ExhibitFile | null>(null)
+  const { start, end } = useVoiceActivity()
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   // Swing the cover open just after mount, and lock page scroll meanwhile.
   useEffect(() => {
@@ -168,10 +171,14 @@ function FolderBook({
                 Playing recording
               </p>
               <audio
+                ref={audioRef}
                 src={set.recording.src}
                 autoPlay
                 className="hidden"
                 aria-label={set.recording.name}
+                onPlay={start}
+                onPause={end}
+                onEnded={end}
               />
             </div>
           )}

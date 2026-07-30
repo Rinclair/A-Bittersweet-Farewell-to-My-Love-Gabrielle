@@ -4,12 +4,15 @@ import { useEffect, useRef, useState } from "react"
 
 import { ArchiveSection } from "@/components/archive"
 import { Envelope } from "@/components/envelope"
+import { FloatingLyrics } from "@/components/floating-lyrics"
 import { FountainPenDecoration, InkBottleDecoration } from "@/components/letter-decorations"
 import { ListenPlayer } from "@/components/listen-player"
+import { MusicPlayer } from "@/components/music-player"
 import { Reveal } from "@/components/reveal"
 import { Button } from "@/components/ui/button"
 import { letterBlocks, type LetterBlock } from "@/lib/letter-content"
 import { narration, narrationAvailable, timingByKey } from "@/lib/narration"
+import { useVoiceActivity } from "@/lib/voice-context"
 import { cn } from "@/lib/utils"
 
 // Words start fading in this many seconds before they are spoken.
@@ -103,7 +106,9 @@ export function Letter() {
   const [durations, setDurations] = useState<number[]>([])
   const [zoom, setZoom] = useState(1)
   const [elapsed, setElapsed] = useState("")
+  const [songTime, setSongTime] = useState(0)
 
+  const { active, start, end } = useVoiceActivity()
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const trackRef = useRef(0)
   const durationsRef = useRef<number[]>([])
@@ -122,6 +127,7 @@ export function Letter() {
     setActiveKey(null)
     revealKeyRef.current = null
     setRevealKey(null)
+    end()
   }
 
   function ensureAudio() {
@@ -157,16 +163,19 @@ export function Letter() {
       void audio.play()
       playingRef.current = true
       setPlaying(true)
+      start()
       return
     }
     if (playingRef.current) {
       audio.pause()
       playingRef.current = false
       setPlaying(false)
+      end()
     } else {
       void audio.play()
       playingRef.current = true
       setPlaying(true)
+      start()
     }
   }
 
@@ -305,6 +314,12 @@ export function Letter() {
 
   return (
     <main id="top" className="px-4 py-14 sm:py-20">
+      <MusicPlayer
+        duck={active}
+        onTimeUpdate={setSongTime}
+      />
+      <FloatingLyrics currentTime={songTime} />
+
       <div
         className="animate-fade-rise relative mx-auto w-[92vw] rotate-[-0.4deg] drop-shadow-2xl sm:w-[80vw]"
         style={{ zoom } as React.CSSProperties}
@@ -334,7 +349,7 @@ export function Letter() {
                 onClick={toggleListen}
                 className="border-[#8f1d1d]/50 font-sans text-[#8f1d1d] hover:border-[#8f1d1d] hover:bg-[#8f1d1d] hover:text-[#f7f1e3]"
               >
-                ▶ Listen — Evan reads this aloud
+                Click me if you'd like to hear my voice again!
               </Button>
             </div>
           )}
