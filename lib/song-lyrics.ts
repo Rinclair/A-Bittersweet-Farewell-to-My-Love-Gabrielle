@@ -9,8 +9,8 @@ export interface LyricWord {
 }
 
 export const song = {
-  videoId: "0d3wxfS4Dtw",
-  title: "The Winner Takes It All",
+  videoId: "CGmdlQA_RZ4",
+  title: "ABBA - The Winner Takes It All | Epic Orchestra (2020)",
 }
 
 export const lyrics: LyricLine[] = [

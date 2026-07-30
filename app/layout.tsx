@@ -17,7 +17,7 @@ const typewriter = Special_Elite({
 })
 
 export const metadata: Metadata = {
-  title: "For Gaby — A Bittersweet Farewell",
+  title: "congratulations-my-love",
   description: "A letter for Gabrielle, from the star in the distant sky.",
 }
 
