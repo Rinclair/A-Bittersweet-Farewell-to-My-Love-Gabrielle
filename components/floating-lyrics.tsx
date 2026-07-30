@@ -2,46 +2,86 @@
 
 import { useEffect, useState } from "react"
 
-import { currentLyricWordIndex, lyricWords } from "@/lib/song-lyrics"
+import {
+  currentLyricWordIndex,
+  lineIndexForWord,
+  lyricWords,
+  wordStartIndexForLine,
+  wordsForLine,
+  type LyricWord,
+} from "@/lib/song-lyrics"
+import { cn } from "@/lib/utils"
 
 interface FloatingLyricsProps {
   currentTime: number
 }
 
+function currentLineIndex(time: number): number {
+  const idx = currentLyricWordIndex(time)
+  return lineIndexForWord(idx)
+}
+
+function WordStack({
+  words,
+  activeWordIndex,
+}: {
+  words: LyricWord[]
+  activeWordIndex: number
+}) {
+  return (
+    <div className="flex flex-col items-center gap-2">
+      {words.map((word, idx) => {
+        const visible = idx <= activeWordIndex
+        const current = idx === activeWordIndex
+        return (
+          <span
+            key={`${word.time}-${word.text}`}
+            className={cn(
+              "font-serif italic transition-all duration-[1200ms] ease-in-out",
+              current
+                ? "text-5xl text-[#e8dcc0]/95 sm:text-7xl"
+                : visible
+                  ? "text-3xl text-[#e8dcc0]/25 sm:text-5xl"
+                  : "text-3xl text-[#e8dcc0]/0 sm:text-5xl"
+            )}
+          >
+            {word.text}
+          </span>
+        )
+      })}
+    </div>
+  )
+}
+
 export function FloatingLyrics({ currentTime }: FloatingLyricsProps) {
-  const [index, setIndex] = useState(0)
+  const [leftLineIndex, setLeftLineIndex] = useState(0)
+  const [activeWordIndex, setActiveWordIndex] = useState(0)
 
   useEffect(() => {
-    setIndex(currentLyricWordIndex(currentTime))
+    const wordIdx = currentLyricWordIndex(currentTime)
+    setLeftLineIndex(lineIndexForWord(wordIdx))
+    setActiveWordIndex(wordIdx)
   }, [currentTime])
 
-  const previous = lyricWords[index - 1]
-  const current = lyricWords[index]
-  const next = lyricWords[index + 1]
+  const leftWords = wordsForLine(leftLineIndex)
+  const rightWords = wordsForLine(leftLineIndex + 1)
+
+  // Find which word within each line is currently active.
+  const leftStart = wordStartIndexForLine(leftLineIndex)
+  const rightStart = wordStartIndexForLine(leftLineIndex + 1)
+  const leftActiveIndex = activeWordIndex - leftStart
+  const rightActiveIndex = activeWordIndex - rightStart
 
   return (
     <>
-      {/* current word, left of the letter */}
-      <div className="pointer-events-none fixed left-2 top-1/2 z-20 hidden max-w-[18vw] -translate-y-1/2 text-right sm:left-6 sm:block">
-        {previous && (
-          <p className="font-serif text-2xl italic text-[#e8dcc0]/30 transition-opacity duration-500 sm:text-3xl">
-            {previous.text}
-          </p>
-        )}
-        {current && (
-          <p className="mt-4 font-serif text-4xl italic text-[#e8dcc0]/95 transition-opacity duration-500 sm:text-6xl">
-            {current.text}
-          </p>
-        )}
+      {/* current line, left of the letter */}
+      <div className="pointer-events-none fixed left-2 top-1/2 z-20 hidden -translate-y-1/2 sm:left-8 sm:block">
+        <WordStack words={leftWords} activeWordIndex={leftActiveIndex} />
       </div>
 
-      {/* next word, right of the letter */}
-      <div className="pointer-events-none fixed right-2 top-1/2 z-20 hidden max-w-[18vw] -translate-y-1/2 text-left sm:right-6 sm:block">
-        {next && (
-          <p className="font-serif text-3xl italic text-[#e8dcc0]/45 transition-opacity duration-500 sm:text-5xl">
-            {next.text}
-          </p>
-        )}
+      {/* next line, right of the letter */}
+      <div className="pointer-events-none fixed right-2 top-1/2 z-20 hidden -translate-y-1/2 text-right sm:right-8 sm:block">
+        <WordStack words={rightWords} activeWordIndex={rightActiveIndex} />
       </div>
     </>
   )

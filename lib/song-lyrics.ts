@@ -117,3 +117,26 @@ export function currentLyricWordIndex(time: number): number {
   }
   return index
 }
+
+/** Returns all word timings that belong to a given lyric line. */
+export function wordsForLine(lineIndex: number): LyricWord[] {
+  if (lineIndex < 0 || lineIndex >= lyrics.length) return []
+  const line = lyrics[lineIndex]
+  const nextLine = lyrics[lineIndex + 1]
+  const lineEnd = nextLine ? nextLine.time : line.time + 8
+  return lyricWords.filter((w) => w.time >= line.time && w.time < lineEnd)
+}
+
+/** Returns the global word index where a given lyric line starts. */
+export function wordStartIndexForLine(lineIndex: number): number {
+  if (lineIndex <= 0) return 0
+  const line = lyrics[lineIndex]
+  return lyricWords.findIndex((w) => w.time >= line.time)
+}
+
+/** Returns the lyric line index that contains the given word index. */
+export function lineIndexForWord(wordIndex: number): number {
+  if (wordIndex < 0) return 0
+  const time = lyricWords[Math.min(wordIndex, lyricWords.length - 1)]?.time ?? 0
+  return currentLyricIndex(time)
+}
