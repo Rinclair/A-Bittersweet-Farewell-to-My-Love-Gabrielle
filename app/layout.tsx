@@ -1,19 +1,18 @@
 import type { Metadata } from "next"
-import { Cormorant_Garamond, Caveat } from "next/font/google"
+import { La_Belle_Aurore, Special_Elite } from "next/font/google"
 
 import "./globals.css"
 
-const serif = Cormorant_Garamond({
+const script = La_Belle_Aurore({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  weight: "400",
   variable: "--font-serif",
 })
 
-const hand = Caveat({
+const typewriter = Special_Elite({
   subsets: ["latin"],
-  weight: ["400", "600"],
-  variable: "--font-hand",
+  weight: "400",
+  variable: "--font-type",
 })
 
 export const metadata: Metadata = {
@@ -27,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${serif.variable} ${hand.variable}`}>
+    <html lang="en" className={`${script.variable} ${typewriter.variable}`}>
       <body>{children}</body>
     </html>
   )

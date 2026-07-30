@@ -14,8 +14,9 @@ const config: Config = {
         ring: "hsl(var(--ring))",
       },
       fontFamily: {
-        serif: ["var(--font-serif)", "Georgia", "serif"],
-        hand: ["var(--font-hand)", "cursive"],
+        serif: ["var(--font-serif)", "cursive"],
+        hand: ["var(--font-serif)", "cursive"],
+        type: ["var(--font-type)", "monospace"],
       },
     },
   },
