@@ -262,7 +262,7 @@ export function ArchiveSection() {
           Recovered evidence
         </p>
         <h2 className="mt-2 font-type text-2xl uppercase tracking-[0.3em] text-[#e8dcc0] sm:text-3xl">
-          The Case Files
+          Our Case Files
         </h2>
         <Stamp className="mt-4 border-[#e06666]/60 text-[#e06666]" />
         <p className="mt-4 font-type text-xs uppercase tracking-[0.25em] text-[#d9c9a3]/60">

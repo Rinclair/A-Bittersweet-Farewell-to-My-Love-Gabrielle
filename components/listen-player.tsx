@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 
@@ -11,6 +11,7 @@ interface ListenPlayerProps {
   totalDuration: number
   onToggle: () => void
   onStop: () => void
+  onSeek?: (ratio: number) => void
 }
 
 export function ListenPlayer({
@@ -20,8 +21,10 @@ export function ListenPlayer({
   totalDuration,
   onToggle,
   onStop,
+  onSeek,
 }: ListenPlayerProps) {
   const [progress, setProgress] = useState(0)
+  const barRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (!playing || !audio) return
@@ -38,6 +41,13 @@ export function ListenPlayer({
     return () => cancelAnimationFrame(raf)
   }, [playing, audio, priorDuration, totalDuration])
 
+  function handleBarClick(event: React.MouseEvent<HTMLDivElement>) {
+    if (!barRef.current || !onSeek) return
+    const rect = barRef.current.getBoundingClientRect()
+    const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width))
+    onSeek(ratio)
+  }
+
   return (
     <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2">
       <div className="flex items-center gap-3 rounded-full bg-[#f7f1e3] py-2 pl-3 pr-4 shadow-2xl ring-1 ring-black/10">
@@ -53,9 +63,13 @@ export function ListenPlayer({
           <span className="text-[10px] uppercase tracking-[0.25em] text-stone-500">
             Evan reads the letter
           </span>
-          <div className="h-1 w-40 overflow-hidden rounded-full bg-stone-300 sm:w-56">
+          <div
+            ref={barRef}
+            onClick={handleBarClick}
+            className="h-2 w-40 cursor-pointer overflow-hidden rounded-full bg-stone-300 sm:w-56"
+          >
             <div
-              className="h-full rounded-full bg-primary transition-[width] duration-200"
+              className="pointer-events-none h-full rounded-full bg-primary transition-[width] duration-200"
               style={{ width: `${Math.round(progress * 100)}%` }}
             />
           </div>

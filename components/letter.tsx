@@ -172,6 +172,42 @@ export function Letter() {
     }
   }
 
+  function seekTo(ratio: number) {
+    if (!audioRef.current || totalDuration <= 0) return
+    const targetTotal = ratio * totalDuration
+
+    // Find which track contains the target total time.
+    let accumulated = 0
+    let targetTrack = 0
+    let targetTimeInTrack = 0
+    for (let i = 0; i < narration.tracks.length; i++) {
+      const trackDuration = durationsRef.current[i] || 0
+      if (
+        accumulated + trackDuration >= targetTotal ||
+        i === narration.tracks.length - 1
+      ) {
+        targetTrack = i
+        targetTimeInTrack = Math.max(0, targetTotal - accumulated)
+        break
+      }
+      accumulated += trackDuration
+    }
+
+    trackRef.current = targetTrack
+    setTrackIndex(targetTrack)
+    activeKeyRef.current = null
+    setActiveKey(null)
+    revealKeyRef.current = null
+    setRevealKey(null)
+
+    const audio = audioRef.current
+    audio.src = narration.tracks[targetTrack]
+    audio.currentTime = targetTimeInTrack
+    if (playingRef.current) {
+      void audio.play()
+    }
+  }
+
   // Track the spoken word (auto-scroll anchor) and lead-revealed word.
   useEffect(() => {
     if (!playing) return
@@ -428,6 +464,7 @@ export function Letter() {
           totalDuration={totalDuration}
           onToggle={toggleListen}
           onStop={stopListening}
+          onSeek={seekTo}
         />
       )}
     </main>
