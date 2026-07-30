@@ -37,12 +37,12 @@ function WordStack({
           <span
             key={`${word.time}-${word.text}`}
             className={cn(
-              "font-serif italic transition-all duration-[1200ms] ease-in-out",
+              "font-serif italic transition-all ease-out",
               current
-                ? "text-5xl text-[#e8dcc0]/95 sm:text-7xl"
+                ? "text-5xl text-[#e8dcc0]/95 duration-150 sm:text-7xl"
                 : visible
-                  ? "text-3xl text-[#e8dcc0]/25 sm:text-5xl"
-                  : "text-3xl text-[#e8dcc0]/0 sm:text-5xl"
+                  ? "text-3xl text-[#e8dcc0]/30 duration-500 sm:text-5xl"
+                  : "text-3xl text-[#e8dcc0]/0 duration-300 sm:text-5xl"
             )}
           >
             {word.text}
