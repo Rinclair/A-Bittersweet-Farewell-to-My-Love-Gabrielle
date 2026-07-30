@@ -18,10 +18,6 @@ import { cn } from "@/lib/utils"
 // Words start fading in this many seconds before they are spoken.
 const REVEAL_LEAD_SECONDS = 0.35
 
-const MIN_ZOOM = 0.8
-const MAX_ZOOM = 2
-const ZOOM_STEP = 0.1
-
 // Deterministic PRNG so server and client render the identical ragged edge.
 function mulberry32(seed: number) {
   return () => {
@@ -104,7 +100,6 @@ export function Letter() {
   const [revealKey, setRevealKey] = useState<string | null>(null)
   const [trackIndex, setTrackIndex] = useState(0)
   const [durations, setDurations] = useState<number[]>([])
-  const [zoom, setZoom] = useState(1)
   const [elapsed, setElapsed] = useState("")
   const [songTime, setSongTime] = useState(0)
 
@@ -322,7 +317,6 @@ export function Letter() {
 
       <div
         className="animate-fade-rise relative mx-auto w-[92vw] rotate-[-0.4deg] drop-shadow-2xl sm:w-[80vw]"
-        style={{ zoom } as React.CSSProperties}
       >
         <InkBottleDecoration className="pointer-events-none absolute -left-8 -top-8 z-10 w-24 drop-shadow-xl sm:-left-16 sm:-top-12 sm:w-40" />
         <FountainPenDecoration className="pointer-events-none absolute -bottom-16 -right-12 z-10 w-72 rotate-[-6deg] drop-shadow-xl sm:-bottom-24 sm:-right-24 sm:w-[28rem] sm:rotate-[-8deg]" />
@@ -407,34 +401,29 @@ export function Letter() {
         </Button>
       </Reveal>
 
-      <div className="fixed bottom-6 right-6 z-50 flex items-center gap-1 rounded-full bg-[#f1e5c6] px-2 py-1.5 text-stone-700 shadow-xl ring-1 ring-black/10">
-        <Button
-          type="button"
-          variant="ghost"
-          aria-label="Zoom out"
-          disabled={zoom <= MIN_ZOOM}
-          onClick={() =>
-            setZoom((z) => Math.max(MIN_ZOOM, +(z - ZOOM_STEP).toFixed(2)))
-          }
-          className="h-7 w-7 rounded-full p-0 text-base"
-        >
-          −
-        </Button>
-        <span className="w-11 text-center font-sans text-xs tabular-nums">
-          {Math.round(zoom * 100)}%
-        </span>
-        <Button
-          type="button"
-          variant="ghost"
-          aria-label="Zoom in"
-          disabled={zoom >= MAX_ZOOM}
-          onClick={() =>
-            setZoom((z) => Math.min(MAX_ZOOM, +(z + ZOOM_STEP).toFixed(2)))
-          }
-          className="h-7 w-7 rounded-full p-0 text-base"
-        >
-          +
-        </Button>
+      <div className="fixed bottom-6 right-6 z-50 max-w-[16rem] rounded-lg bg-[#f1e5c6] p-3 text-xs text-stone-700 shadow-xl ring-1 ring-black/10 sm:max-w-[18rem]">
+        <p>
+          I made the code, y&apos;know?!{" "}
+          <a
+            href="https://github.com/Rinclair/A-Bittersweet-Farewell-to-My-Love-Gabrielle"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-[#8f1d1d] underline hover:text-[#6d1414]"
+          >
+            Check me bee hehehe!
+          </a>
+        </p>
+        <p className="mt-2">
+          Here is the google drive for all the files I used in this letter!{" "}
+          <a
+            href="https://drive.google.com/drive/folders/1rbQIFyaSnJFpK2_fXVGW-m6dcmxpK__S?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-[#8f1d1d] underline hover:text-[#6d1414]"
+          >
+            Open folder
+          </a>
+        </p>
       </div>
 
       {mode === "listen" && (

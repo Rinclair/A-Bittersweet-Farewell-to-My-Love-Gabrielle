@@ -2,50 +2,44 @@
 
 import { useEffect, useState } from "react"
 
-import { currentLyricIndex, lyrics } from "@/lib/song-lyrics"
+import { currentLyricWordIndex, lyricWords } from "@/lib/song-lyrics"
 
 interface FloatingLyricsProps {
   currentTime: number
 }
 
 export function FloatingLyrics({ currentTime }: FloatingLyricsProps) {
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [index, setIndex] = useState(0)
 
   useEffect(() => {
-    setActiveIndex(currentLyricIndex(currentTime))
+    setIndex(currentLyricWordIndex(currentTime))
   }, [currentTime])
 
-  const previous = lyrics[activeIndex - 1]
-  const current = lyrics[activeIndex]
-  const next = lyrics[activeIndex + 1]
-  const upcoming = lyrics[activeIndex + 2]
+  const previous = lyricWords[index - 1]
+  const current = lyricWords[index]
+  const next = lyricWords[index + 1]
 
   return (
     <>
-      {/* left side */}
-      <div className="pointer-events-none fixed left-2 top-1/2 z-20 hidden max-w-[14vw] -translate-y-1/2 text-right sm:left-6 sm:block">
+      {/* current word, left of the letter */}
+      <div className="pointer-events-none fixed left-2 top-1/2 z-20 hidden max-w-[18vw] -translate-y-1/2 text-right sm:left-6 sm:block">
         {previous && (
-          <p className="font-serif text-sm italic text-[#e8dcc0]/40 transition-opacity duration-700 sm:text-base">
+          <p className="font-serif text-2xl italic text-[#e8dcc0]/30 transition-opacity duration-500 sm:text-3xl">
             {previous.text}
           </p>
         )}
         {current && (
-          <p className="mt-2 font-serif text-lg italic text-[#e8dcc0]/90 transition-opacity duration-700 sm:text-xl">
+          <p className="mt-4 font-serif text-4xl italic text-[#e8dcc0]/95 transition-opacity duration-500 sm:text-6xl">
             {current.text}
           </p>
         )}
       </div>
 
-      {/* right side */}
-      <div className="pointer-events-none fixed right-2 top-1/2 z-20 hidden max-w-[14vw] -translate-y-1/2 text-left sm:right-6 sm:block">
+      {/* next word, right of the letter */}
+      <div className="pointer-events-none fixed right-2 top-1/2 z-20 hidden max-w-[18vw] -translate-y-1/2 text-left sm:right-6 sm:block">
         {next && (
-          <p className="font-serif text-base italic text-[#e8dcc0]/70 transition-opacity duration-700 sm:text-lg">
+          <p className="font-serif text-3xl italic text-[#e8dcc0]/45 transition-opacity duration-500 sm:text-5xl">
             {next.text}
-          </p>
-        )}
-        {upcoming && (
-          <p className="mt-2 font-serif text-sm italic text-[#e8dcc0]/40 transition-opacity duration-700 sm:text-base">
-            {upcoming.text}
           </p>
         )}
       </div>

@@ -3,6 +3,11 @@ export interface LyricLine {
   text: string
 }
 
+export interface LyricWord {
+  time: number
+  text: string
+}
+
 export const song = {
   videoId: "0d3wxfS4Dtw",
   title: "The Winner Takes It All",
@@ -77,6 +82,37 @@ export function currentLyricIndex(time: number): number {
   let index = 0
   for (let i = 0; i < lyrics.length; i++) {
     if (lyrics[i].time <= time) index = i
+    else break
+  }
+  return index
+}
+
+/** Build word-level timings by spreading each line's duration evenly across its words. */
+function buildWordTimings(): LyricWord[] {
+  const words: LyricWord[] = []
+  for (let i = 0; i < lyrics.length; i++) {
+    const line = lyrics[i]
+    const nextLine = lyrics[i + 1]
+    const lineEnd = nextLine ? nextLine.time : line.time + 8 // fallback tail
+    const lineWords = line.text.split(/\s+/).filter(Boolean)
+    const duration = lineEnd - line.time
+    lineWords.forEach((word, idx) => {
+      words.push({
+        time: line.time + (idx / Math.max(1, lineWords.length)) * duration,
+        text: word,
+      })
+    })
+  }
+  return words
+}
+
+export const lyricWords = buildWordTimings()
+
+/** Returns the index of the lyric word active at the given time. */
+export function currentLyricWordIndex(time: number): number {
+  let index = 0
+  for (let i = 0; i < lyricWords.length; i++) {
+    if (lyricWords[i].time <= time) index = i
     else break
   }
   return index
