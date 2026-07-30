@@ -90,15 +90,23 @@ export function currentLyricIndex(time: number): number {
 /** Build word-level timings by spreading each line's duration evenly across its words. */
 function buildWordTimings(): LyricWord[] {
   const words: LyricWord[] = []
+  // Pack words into the first 80% of the line window so they finish before
+  // the next line starts (most sung lines have a small trailing pause).
+  const LINE_FILL_RATIO = 0.8
+  // Nudge lyrics slightly earlier to compensate for player/network latency.
+  const EARLY_OFFSET = -0.4
   for (let i = 0; i < lyrics.length; i++) {
     const line = lyrics[i]
     const nextLine = lyrics[i + 1]
     const lineEnd = nextLine ? nextLine.time : line.time + 8 // fallback tail
     const lineWords = line.text.split(/\s+/).filter(Boolean)
-    const duration = lineEnd - line.time
+    const duration = (lineEnd - line.time) * LINE_FILL_RATIO
     lineWords.forEach((word, idx) => {
       words.push({
-        time: line.time + (idx / Math.max(1, lineWords.length)) * duration,
+        time:
+          line.time +
+          (idx / Math.max(1, lineWords.length)) * duration +
+          EARLY_OFFSET,
         text: word,
       })
     })
