@@ -288,6 +288,8 @@ export function Letter() {
           sealLetter="E"
           heading="A letter for Gaby"
           hint="Break the seal to read"
+          question="What is Gaby's favourite animal?"
+          answers={["seal", "fox"]}
         />
       </main>
     )
@@ -302,14 +304,14 @@ export function Letter() {
   const totalDuration = durations.reduce((sum, d) => sum + (d || 0), 0)
 
   return (
-    <main id="top" className="relative px-4 py-14 sm:py-20">
-      <InkBottleDecoration className="pointer-events-none absolute left-2 top-40 z-10 w-20 drop-shadow-xl sm:left-8 sm:top-48 sm:w-32" />
-      <FountainPenDecoration className="pointer-events-none absolute right-0 top-36 z-10 w-14 drop-shadow-xl sm:right-6 sm:top-44 sm:w-24" />
-
+    <main id="top" className="px-4 py-14 sm:py-20">
       <div
-        className="animate-fade-rise mx-auto w-[92vw] rotate-[-0.4deg] drop-shadow-2xl sm:w-[80vw]"
+        className="animate-fade-rise relative mx-auto w-[92vw] rotate-[-0.4deg] drop-shadow-2xl sm:w-[80vw]"
         style={{ zoom } as React.CSSProperties}
       >
+        <InkBottleDecoration className="pointer-events-none absolute -left-8 -top-8 z-10 w-24 drop-shadow-xl sm:-left-16 sm:-top-12 sm:w-40" />
+        <FountainPenDecoration className="pointer-events-none absolute -bottom-16 -right-12 z-10 w-72 rotate-[-6deg] drop-shadow-xl sm:-bottom-24 sm:-right-24 sm:w-[28rem] sm:rotate-[-8deg]" />
+
         <article
           className="paper-old px-10 py-16 font-serif text-[#26314e] sm:px-20 sm:py-24"
           style={{ clipPath: PAPER_CLIP }}

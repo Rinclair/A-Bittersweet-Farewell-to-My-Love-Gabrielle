@@ -1,13 +1,60 @@
 "use client"
 
+import { useState } from "react"
+
+import { Button } from "@/components/ui/button"
+
 interface EnvelopeProps {
   onOpen: () => void
   sealLetter: string
   heading: string
   hint: string
+  question?: string
+  answers?: string[]
 }
 
-export function Envelope({ onOpen, sealLetter, heading, hint }: EnvelopeProps) {
+function normalizeAnswer(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, " ")
+}
+
+export function Envelope({
+  onOpen,
+  sealLetter,
+  heading,
+  hint,
+  question,
+  answers = [],
+}: EnvelopeProps) {
+  const [asking, setAsking] = useState(false)
+  const [value, setValue] = useState("")
+  const [error, setError] = useState(false)
+
+  const requiresAuth = question && answers.length > 0
+
+  function handleSealClick() {
+    if (requiresAuth) {
+      setAsking(true)
+      setValue("")
+      setError(false)
+      return
+    }
+    onOpen()
+  }
+
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault()
+    const normalized = normalizeAnswer(value)
+    if (answers.map(normalizeAnswer).includes(normalized)) {
+      setAsking(false)
+      onOpen()
+    } else {
+      setError(true)
+    }
+  }
+
   return (
     <div className="flex flex-col items-center gap-10">
       <p className="text-xs uppercase tracking-[0.35em] text-stone-400">
@@ -28,7 +75,7 @@ export function Envelope({ onOpen, sealLetter, heading, hint }: EnvelopeProps) {
         {/* wax seal */}
         <button
           type="button"
-          onClick={onOpen}
+          onClick={handleSealClick}
           aria-label="Open the letter"
           className="group absolute left-1/2 top-[55%] -translate-x-1/2 -translate-y-1/2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
@@ -42,6 +89,57 @@ export function Envelope({ onOpen, sealLetter, heading, hint }: EnvelopeProps) {
       </div>
 
       <p className="text-sm text-stone-500">{hint}</p>
+
+      {/* question gate */}
+      {asking && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="absolute inset-0 bg-black/70"
+            onClick={() => setAsking(false)}
+          />
+          <form
+            onSubmit={handleSubmit}
+            className="relative w-full max-w-sm rounded-lg bg-[#f7f1e3] p-6 shadow-2xl"
+          >
+            <p className="text-center font-serif text-lg text-[#26314e]">
+              {question}
+            </p>
+            <input
+              type="text"
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value)
+                setError(false)
+              }}
+              autoFocus
+              placeholder="Type your answer"
+              className="mt-4 w-full rounded-md border border-[#8f1d1d]/30 bg-[#fdfaf2] px-3 py-2 text-center font-serif text-[#26314e] placeholder:text-stone-400 focus:border-[#8f1d1d] focus:outline-none focus:ring-1 focus:ring-[#8f1d1d]"
+            />
+            {error && (
+              <p className="mt-2 text-center text-xs text-[#8f1d1d]">
+                That doesn&apos;t look right. Try again.
+              </p>
+            )}
+            <Button
+              type="submit"
+              className="mt-4 w-full bg-[#8f1d1d] text-[#f7f1e3] hover:bg-[#6d1414]"
+            >
+              Open the letter
+            </Button>
+            <button
+              type="button"
+              onClick={() => setAsking(false)}
+              className="mt-2 w-full text-center text-xs text-stone-500 hover:text-stone-700"
+            >
+              Cancel
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   )
 }
