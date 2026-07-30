@@ -12,7 +12,7 @@ interface ExhibitFile {
 }
 
 interface RecordingFile {
-  id: string
+  src: string
   name: string
   kind: "audio"
 }
@@ -31,8 +31,6 @@ const thumbUrl = (id: string) =>
 const fullUrl = (id: string) => `https://lh3.googleusercontent.com/d/${id}=w1600`
 const videoUrl = (id: string) =>
   `https://drive.google.com/file/d/${id}/preview`
-const audioUrl = (id: string) =>
-  `https://drive.google.com/uc?export=download&id=${id}`
 
 // Deterministic photo tilt so every visitor sees the same desk.
 const TILTS = [-2.1, 1.4, -0.8, 2.2, -1.5, 0.9]
@@ -167,13 +165,12 @@ function FolderBook({
           {set.recording && (
             <div className="mt-6 rounded-md border border-[#8f1d1d]/20 bg-[#fdfaf2] p-3 shadow-sm">
               <p className="font-type text-[10px] uppercase tracking-[0.25em] text-[#6d5222]">
-                Attached recording
+                Playing recording
               </p>
               <audio
-                src={audioUrl(set.recording.id)}
+                src={set.recording.src}
                 autoPlay
-                controls
-                className="mt-2 w-full"
+                className="hidden"
                 aria-label={set.recording.name}
               />
             </div>

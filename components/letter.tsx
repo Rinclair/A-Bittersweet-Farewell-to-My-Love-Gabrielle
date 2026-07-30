@@ -226,7 +226,7 @@ export function Letter() {
 
   // Count how much time has passed since the letter was given.
   // Hard-coded moment: Friday, July 31st 2026 at 07:00 Jakarta time (WIB, UTC+7).
-  const GIVEN_AT_WIB = "2026-07-31T07:00:00+07:00"
+  const GIVEN_AT_WIB = "2026-07-31T03:00:00+07:00"
   useEffect(() => {
     function updateElapsed() {
       const givenAt = new Date(GIVEN_AT_WIB)
@@ -289,7 +289,7 @@ export function Letter() {
           heading="A letter for Gaby"
           hint="Break the seal to read"
           question="What is Gaby's favourite animal?"
-          answers={["seal", "fox"]}
+          answers={["sea lion", "fox"]}
         />
       </main>
     )

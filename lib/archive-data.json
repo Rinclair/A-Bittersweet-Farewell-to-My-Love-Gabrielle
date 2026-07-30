@@ -4,7 +4,7 @@
       "id": "1MePZxOhrj-917Bcn6dwmg0qxyFf8XBdT",
       "name": "Special Moments",
       "recording": {
-        "id": "1W1dQCQVfKY45fspszsEM7zmxMd0pF8at",
+        "src": "/recordings/file-no-01.m4a",
         "name": "File No.01.m4a",
         "kind": "audio"
       },
@@ -25,7 +25,7 @@
       "id": "1hFsCTvGcW9HL6xVjHCYEP9RgDlXnvR5w",
       "name": "Pictures of Me & Your Favourites",
       "recording": {
-        "id": "1-1Ogjv4SGe2Pbif2HFtvGSMj617LNd5r",
+        "src": "/recordings/file-no-02.m4a",
         "name": "File No.02.m4a",
         "kind": "audio"
       },
@@ -106,7 +106,7 @@
       "id": "1EheOPkin6kdeOGBMGL2XTVxZNA7AkjX9",
       "name": "Pictures of Us",
       "recording": {
-        "id": "1kNchy6Z9MDBqCGggZV5iWaux8zJ9BAbr",
+        "src": "/recordings/file-no-03.m4a",
         "name": "File No.03.m4a",
         "kind": "audio"
       },
@@ -167,7 +167,7 @@
       "id": "1_VOuhZIKrwE8v0OZN6bDo3KUW7xF3qZm",
       "name": "Prettiest & Cutest Pictures",
       "recording": {
-        "id": "1JY8kagg1xap5vIk88nreodFgzHFRmHfw",
+        "src": "/recordings/file-no-04.m4a",
         "name": "File No.04.m4a",
         "kind": "audio"
       },
@@ -363,7 +363,7 @@
       "id": "1j2LSBbsqs-JgLBISQKk1IvL5rdfgz87G",
       "name": "Videos",
       "recording": {
-        "id": "19in3w6AvZkkjbOyBgZ0ISAguVdiQNETM",
+        "src": "/recordings/file-no-05.m4a",
         "name": "File No.05.m4a",
         "kind": "audio"
       },
