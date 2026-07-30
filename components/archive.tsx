@@ -123,6 +123,16 @@ function FolderBook({
     }
   }, [])
 
+  // Ensure the global voice-activity flag is cleared when the folder closes,
+  // so background music returns to full volume even if the audio element is
+  // unmounted before its onPause/onEnded events fire.
+  useEffect(() => {
+    return () => {
+      end()
+      audioRef.current?.pause()
+    }
+  }, [end])
+
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return
