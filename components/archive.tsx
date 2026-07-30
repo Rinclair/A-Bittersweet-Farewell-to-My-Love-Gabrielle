@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 
+import { TapeRecorder } from "@/components/tape-recorder"
 import { useVoiceActivity } from "@/lib/voice-context"
 import { cn } from "@/lib/utils"
 import archiveData from "@/lib/archive-data.json"
@@ -166,10 +167,8 @@ function FolderBook({
           </p>
 
           {set.recording && (
-            <div className="mt-6 rounded-md border border-[#8f1d1d]/20 bg-[#fdfaf2] p-3 shadow-sm">
-              <p className="font-type text-[10px] uppercase tracking-[0.25em] text-[#6d5222]">
-                Playing recording
-              </p>
+            <div className="mt-6 flex flex-col items-center">
+              <TapeRecorder className="h-32 w-auto sm:h-40" />
               <audio
                 ref={audioRef}
                 src={set.recording.src}
@@ -270,24 +269,28 @@ export function ArchiveSection() {
         </p>
       </div>
 
-      <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
         {sets.map((set, index) => (
           <button
             key={set.id}
             type="button"
             onClick={() => setOpenIndex(index)}
-            className="group text-left"
+            className="group relative text-left"
             aria-label={`Open file: ${set.name}`}
           >
-            <div className="h-4 w-36 rounded-t-md bg-[#c9a86a] shadow-sm" />
-            <div className="rounded-md rounded-tl-none bg-gradient-to-br from-[#dfc08a] to-[#c8a263] p-7 shadow-lg transition-transform duration-300 group-hover:-translate-y-1 group-hover:rotate-[-0.5deg]">
-              <p className="font-type text-xs uppercase tracking-[0.3em] text-[#6d5222]">
+            {/* papers sticking out behind the folder */}
+            <div className="pointer-events-none absolute -top-3 left-3 right-3 bottom-2 -z-10 rounded-sm bg-[#f7f1e3] shadow-sm [transform:rotate(-2deg)]" />
+            <div className="pointer-events-none absolute -top-2 left-4 right-2 bottom-1 -z-10 rounded-sm bg-[#ede5d0] shadow-sm [transform:rotate(1.5deg)]" />
+
+            <div className="h-5 w-44 rounded-t-md bg-[#c9a86a] shadow-sm" />
+            <div className="rounded-md rounded-tl-none bg-gradient-to-br from-[#dfc08a] to-[#c8a263] p-8 shadow-lg transition-transform duration-300 group-hover:-translate-y-1 group-hover:rotate-[-0.5deg]">
+              <p className="font-type text-sm uppercase tracking-[0.3em] text-[#6d5222]">
                 File No. {fileNo(index)}
               </p>
-              <p className="mt-3 font-type text-base uppercase tracking-[0.1em] text-[#3d2f14]">
+              <p className="mt-4 font-type text-lg uppercase tracking-[0.1em] text-[#3d2f14]">
                 {set.name}
               </p>
-              <p className="mt-5 font-type text-xs uppercase tracking-[0.25em] text-[#6d5222]">
+              <p className="mt-6 font-type text-sm uppercase tracking-[0.25em] text-[#6d5222]">
                 {set.files.length} exhibits · open ›
               </p>
             </div>

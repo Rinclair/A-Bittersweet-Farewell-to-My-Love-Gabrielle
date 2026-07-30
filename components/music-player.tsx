@@ -27,6 +27,8 @@ export function MusicPlayer({
   const containerRef = useRef<HTMLDivElement | null>(null)
   const playerRef = useRef<any>(null)
   const rafRef = useRef<number>(0)
+  const fadeRafRef = useRef<number>(0)
+  const currentVolumeRef = useRef(50)
   const [ready, setReady] = useState(false)
 
   // Load the YouTube IFrame API and create the player.
@@ -83,6 +85,7 @@ export function MusicPlayer({
 
     return () => {
       cancelAnimationFrame(rafRef.current)
+      cancelAnimationFrame(fadeRafRef.current)
       try {
         playerRef.current?.destroy()
       } catch {
@@ -112,14 +115,32 @@ export function MusicPlayer({
     return () => cancelAnimationFrame(rafRef.current)
   }, [ready, onTimeUpdate])
 
-  // Duck the music when voice audio is playing.
+  // Smoothly fade the music volume when ducking/unducking.
   useEffect(() => {
     if (!ready) return
-    try {
-      playerRef.current?.setVolume(duck ? 3 : 50)
-    } catch {
-      // ignore
+    const target = duck ? 3 : 50
+    cancelAnimationFrame(fadeRafRef.current)
+    const step = () => {
+      const diff = target - currentVolumeRef.current
+      if (Math.abs(diff) < 0.5) {
+        currentVolumeRef.current = target
+        try {
+          playerRef.current?.setVolume(target)
+        } catch {
+          // ignore
+        }
+        return
+      }
+      currentVolumeRef.current += diff * 0.08
+      try {
+        playerRef.current?.setVolume(Math.round(currentVolumeRef.current))
+      } catch {
+        // ignore
+      }
+      fadeRafRef.current = requestAnimationFrame(step)
     }
+    fadeRafRef.current = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(fadeRafRef.current)
   }, [duck, ready])
 
   return (
