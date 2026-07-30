@@ -116,7 +116,7 @@ export function MusicPlayer({
   useEffect(() => {
     if (!ready) return
     try {
-      playerRef.current?.setVolume(duck ? 25 : 50)
+      playerRef.current?.setVolume(duck ? 15 : 50)
     } catch {
       // ignore
     }

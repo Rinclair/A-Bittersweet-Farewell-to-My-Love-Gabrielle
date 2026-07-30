@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react"
 
 import { ArchiveSection } from "@/components/archive"
 import { Envelope } from "@/components/envelope"
-import { FloatingLyrics } from "@/components/floating-lyrics"
 import { FountainPenDecoration, InkBottleDecoration } from "@/components/letter-decorations"
 import { ListenPlayer } from "@/components/listen-player"
 import { MusicPlayer } from "@/components/music-player"
@@ -101,7 +100,6 @@ export function Letter() {
   const [trackIndex, setTrackIndex] = useState(0)
   const [durations, setDurations] = useState<number[]>([])
   const [elapsed, setElapsed] = useState("")
-  const [songTime, setSongTime] = useState(0)
 
   const { active, start, end } = useVoiceActivity()
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -309,11 +307,7 @@ export function Letter() {
 
   return (
     <main id="top" className="px-4 py-14 sm:py-20">
-      <MusicPlayer
-        duck={active}
-        onTimeUpdate={setSongTime}
-      />
-      <FloatingLyrics currentTime={songTime} />
+      <MusicPlayer duck={active} />
 
       <div
         className="animate-fade-rise relative mx-auto w-[92vw] rotate-[-0.4deg] drop-shadow-2xl sm:w-[80vw]"
